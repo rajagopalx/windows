@@ -1,16 +1,18 @@
-$JSON = ''
+Import-Module PSTerminalServices
+
+$POSTDATA = ''
 $localusers = Get-WmiObject -Class Win32_UserAccount | foreach { $_.Caption }
 Get-WmiObject Win32_PerfFormattedData_PerfProc_Process `
     | Where-Object { $_.name -inotmatch '_total' } `
     | ForEach-Object {
-            $localuser = 0
+            $islocaluser = 0
             $id = $_.IDProcess
             $Process = Get-Process -Id $id -IncludeUserName
             $app = $Process.Product -replace '\s',''
             if (!$app) { $app = "None"}
             $owner = $Process.UserName
             if (  $localusers.Contains($owner)) { 
-                $localuser = 1
+                $islocaluser = 1
             }
             $owner = $owner -replace '\s',''
             if (!$owner) { $owner = "None"}
@@ -24,6 +26,21 @@ Get-WmiObject Win32_PerfFormattedData_PerfProc_Process `
             $iowritebytes = ([math]::Round($_.IOWriteBytesPersec/1Mb,2))
             $ioreadops = $_.IOReadOperationsPersec
             $iowriteops = $_.IOWriteOperationsPersec
-            $JSON += "windows,computer=$computer,process=$name,user=$user,title=$app id=$id,cpu_proc_per=$cpu_processor_per,cpu_user_per=$cpu_user_per,ram=$ram,diskread=$ioreadbytes,diskwrite=$iowritebytes,readops=$ioreadops,writeops=$iowriteops,localuser=$localuser `n"
+            $POSTDATA += "windows,computer=$computer,process=$name,user=$user,title=$app,id=$id cpu_proc_per=$cpu_processor_per,cpu_user_per=$cpu_user_per,ram=$ram,diskread=$ioreadbytes,diskwrite=$iowritebytes,readops=$ioreadops,writeops=$iowriteops,localuser=$islocaluser `n"
     }
-Invoke-WebRequest -uri "http://192.168.30.200:8086/write?db=telegraf" -Method POST -Body  $JSON
+
+Get-TSSession -ComputerName "localhost" | Where-Object { $_.UserName -ne "" } `
+| ForEach-Object {
+    $isloggedin = 0
+    $username = $_.UserName
+    $status = $_.ConnectionState
+    if ($status -eq 'Active') {$isloggedin = 1}
+    $clientname = $_.ClientName
+    if (!$clientname) { $clientname = "None"}
+    $clientipaddress = $_.ClientIPAddress.IPAddressToString
+    if (!$clientipaddress) { $clientipaddress = "None"}
+    $computername = $env:COMPUTERNAME
+    $POSTDATA += "usersessions,computer=$computername,user=$username,clientname=$clientname,clientip=$clientipaddress,status=$status isloggedin=$isloggedin `n" 
+}
+$POSTDATA
+Invoke-WebRequest -UseBasicParsing -uri "http://192.168.30.200:8086/write?db=telegraf" -Method POST -Body  $POSTDATA
