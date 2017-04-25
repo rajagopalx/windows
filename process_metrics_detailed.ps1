@@ -22,6 +22,7 @@ for(;;) {
                $owner = $owner -replace '\s',''
                if (!$owner) { $owner = "None"}
                $user = $owner.Split('\')[1]
+               if (!$user) { $user = "None"}
                $name = $_.Name -replace '\s',''
                $computer = $_.PSComputerName
                $cpu_processor_per = $_.PercentProcessorTime
