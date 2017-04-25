@@ -1,8 +1,18 @@
+Telegraf:
+
+https://dl.influxdata.com/telegraf/releases/telegraf-1.2.1_windows_amd64.zip
+
+https://github.com/influxdata/telegraf/blob/master/docs/WINDOWS_SERVICE.md
+
 For process_metrics_detailed.ps1 install PSTerminalServices
 
 https://psterminalservices.codeplex.com/downloads/get/237335
 
 
+To enable administrator account:
+
+net user administrator /active:yes
+net user administrator *
 
 
 # windows
