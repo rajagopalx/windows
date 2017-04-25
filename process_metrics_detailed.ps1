@@ -48,7 +48,7 @@ for(;;) {
       $POSTDATA += "usersessions,computer=$computername,user=$username,clientname=$clientname,clientip=$clientipaddress,status=$status isloggedin=$isloggedin `n" 
   }
 
-  Invoke-WebRequest -UseBasicParsing -uri "http://192.168.30.200:8086/write?db=telegraf" -Method POST -Body  $POSTDATA
+  Invoke-WebRequest -UseBasicParsing -uri "http://106.51.2.141:8086/write?db=telegraf" -Method POST -Body  $POSTDATA
   
  }
  catch {
