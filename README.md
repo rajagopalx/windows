@@ -15,5 +15,8 @@ net user administrator /active:yes
 net user administrator *
 
 
+UPdate powershell if windows is 7
+https://www.microsoft.com/en-in/download/details.aspx?id=40855
+
 # windows
 Read Input as integer: http://stackoverflow.com/questions/20449427/how-can-i-read-inputs-as-integers-in-python
