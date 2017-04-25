@@ -52,7 +52,7 @@ for(;;) {
   
  }
  catch {
-  # do something with $_, log it, more likely
+    $_ | Out-File C:\monitoring\errors.txt -Append
  }
 
  # wait for a minute
