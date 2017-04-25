@@ -30,7 +30,7 @@ for(;;) {
                $iowriteops = $_.IOWriteOperationsPersec
                $POSTDATA += "windows,computer=$computer,process=$name,user=$user,title=$app,id=$id cpu_proc_per=$cpu_processor_per,cpu_user_per=$cpu_user_per,ram=$ram,diskread=$ioreadbytes,diskwrite=$iowritebytes,readops=$ioreadops,writeops=$iowriteops,localuser=$islocaluser `n"
        }
-   Invoke-WebRequest -UseBasicParsing -uri "http://192.168.30.200:8086/write?db=telegraf" -Method POST -Body  $POSTDATA
+   Invoke-WebRequest -UseBasicParsing -uri "http://106.51.2.141:8086/write?db=telegraf" -Method POST -Body  $POSTDATA
  }
  catch {
       $_ | Out-File C:\monitoring\errors.txt -Append
