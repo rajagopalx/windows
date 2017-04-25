@@ -33,7 +33,7 @@ for(;;) {
    Invoke-WebRequest -UseBasicParsing -uri "http://192.168.30.200:8086/write?db=telegraf" -Method POST -Body  $POSTDATA
  }
  catch {
-  # do something with $_, log it, more likely
+      $_ | Out-File C:\monitoring\errors.txt -Append
  }
 
  # wait for a minute
